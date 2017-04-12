@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -43,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
     private bokAdapter mAdapter;
     private ListView lv;
     private ArrayList<Bok> mBooksList;
+    private ArrayList<Bok> mBooksList1;
     private ProgressBar Bar;
     private static final String LOG_TAG = MainActivity.class.getName();
+    private static final String BOOKS_LIST_STATE = "booksList";
     final String BOOK_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_INTERNET_PERMISSION);
         } else {
 
+            
 //click listener to Text edit search buttom
             Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
             sokKnapp.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +81,17 @@ public class MainActivity extends AppCompatActivity {
                     Bar.setVisibility(View.VISIBLE);
                     BookAsyncTask task = new BookAsyncTask();
                     task.execute();
+
                 }
             });
         }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+
+        super.onSaveInstanceState(outState);
     }
 
     private void updateUi() {
