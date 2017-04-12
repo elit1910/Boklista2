@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Booklist Application</string>
+    <string name="sokOrd">Enter keywords for search</string>
+    <string name="sokKnapp">Search</string>
+    <string name="no_internet_connection">no internet connection</string>
+    <string name="no_books">no books are available</string>
+    <string name="enter_search_keyword">Enter Search</string>
+    <string name="result_not_found">No results found</string>
+
+
+
+</resources>

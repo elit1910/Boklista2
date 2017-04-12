@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/aktivitet_vertikal_marginal"
+    android:paddingLeft="@dimen/aktivitet_horsontell_marginal"
+    android:paddingBottom="@dimen/aktivitet_vertikal_marginal"
+    android:paddingRight="@dimen/aktivitet_horsontell_marginal"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/sokOrd"
+        android:layout_marginTop="@dimen/aktivitet_vertikal_marginal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/sokKnapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sokKnapp"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/aktivitet_vertikal_marginal"
+        android:layout_marginLeft="@dimen/aktivitet_horsontell_marginal"
+        android:layout_marginBottom="@dimen/aktivitet_vertikal_marginal"
+        />
+    <!--android:gravity="center_vertical|center_horizontal"-->
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"/>
+
+    <ListView
+        android:id="@+id/list"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tomView"
+        android:text="@string/no_books"/>
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--standard enligt android guidelines -->
+    <dimen name="aktivitet_horsontell_marginal">16dp</dimen>
+    <dimen name="aktivitet_vertikal_marginal">16dp</dimen>
+    <dimen name="padding">8dp</dimen>
+</resources>
