@@ -1,10 +1,14 @@
 
 package com.example.boklista2;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +20,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.pm.PackageManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Bok> mBooksList;
     private ProgressBar Bar;
     private static final String LOG_TAG = MainActivity.class.getName();
-
-
     final String BOOK_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
 
@@ -55,23 +57,29 @@ public class MainActivity extends AppCompatActivity {
         Bar.setVisibility(View.GONE);
         lv = (ListView) findViewById(R.id.list);
 
+//Kolla internet permission
+        final int REQUEST_INTERNET_PERMISSION = 1;
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this, new String[]{Manifest.permission.INTERNET},
+                    REQUEST_INTERNET_PERMISSION);
+        } else {
 
 //click listener to Text edit search buttom
-        Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
-        sokKnapp.setOnClickListener(new View.OnClickListener() {
+            Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
+            sokKnapp.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                Bar.setVisibility(View.VISIBLE);
-                BookAsyncTask task = new BookAsyncTask();
-                task.execute();
-
-
-            }
-        });
-
-
+                    Bar.setVisibility(View.VISIBLE);
+                    BookAsyncTask task = new BookAsyncTask();
+                    task.execute();
+                }
+            });
+        }
     }
 
     private void updateUi() {
@@ -257,29 +265,28 @@ public class MainActivity extends AppCompatActivity {
                         authors = authorList.toArray(new String[authorList.size()]);
 
                     }
-                        String description = "";
-                        if (bookInfo.optString("description") != null)
-                            description = bookInfo.optString("description");
+                    String description = "";
+                    if (bookInfo.optString("description") != null)
+                        description = bookInfo.optString("description");
 
-                        String infoLink = "";
-                        if (bookInfo.optString("infoLink") != null)
-                            infoLink = bookInfo.optString("infoLink");
+                    String infoLink = "";
+                    if (bookInfo.optString("infoLink") != null)
+                        infoLink = bookInfo.optString("infoLink");
 
 
-                        books.add(new Bok(title, authors, description, infoLink));
-                        Log.d(LOG_TAG, title);
-                        Log.d(LOG_TAG, description);
-                        Log.d(LOG_TAG, infoLink);
+                    books.add(new Bok(title, authors, description, infoLink));
+                    Log.d(LOG_TAG, title);
+                    Log.d(LOG_TAG, description);
+                    Log.d(LOG_TAG, infoLink);
 
-                    }
-                } catch(JSONException e){
-                    Log.e(LOG_TAG, "Problem parsing the book JSON results", e);
                 }
-                Log.d(LOG_TAG, books.toString());
-
-                return books;
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "Problem parsing the book JSON results", e);
             }
 
+            return books;
         }
 
     }
+
+}
