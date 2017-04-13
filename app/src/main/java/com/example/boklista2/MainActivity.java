@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,6 @@ import android.content.pm.PackageManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,24 +36,20 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import static com.example.boklista2.R.id.forfattare;
-
-
 public class MainActivity extends AppCompatActivity {
 
-    private bokAdapter mAdapter;
+
     private ListView lv;
     private ArrayList<Bok> mBooksList;
-    private ArrayList<Bok> mBooksList1;
     private ProgressBar Bar;
     private static final String LOG_TAG = MainActivity.class.getName();
-    private static final String BOOKS_LIST_STATE = "booksList";
     final String BOOK_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=";
-
+    private static final String GAME_STATE_KEY = "books";
 
     @Override
      protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Bar = (ProgressBar) findViewById(R.id.loading_indicator);
@@ -65,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(
                     this, new String[]{Manifest.permission.INTERNET},
                     REQUEST_INTERNET_PERMISSION);
+
         } else {
 
-            
+
 //click listener to Text edit search buttom
             Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
             sokKnapp.setOnClickListener(new View.OnClickListener() {
@@ -84,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        }
 
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState){
-
+        
         super.onSaveInstanceState(outState);
     }
 
@@ -118,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(websiteIntent);
             }
         });
-
     }
 
     private class BookAsyncTask extends AsyncTask<URL, Void, ArrayList<Bok>> {
