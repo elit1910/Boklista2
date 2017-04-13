@@ -60,5 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tomView"
-        android:text="@string/no_books"/>
+        android:text="@string/no_books"
+        android:layout_gravity="center"
+        android:textSize="20sp"/>
 </LinearLayout>

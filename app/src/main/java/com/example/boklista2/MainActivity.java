@@ -1,9 +1,13 @@
 
 package com.example.boklista2;
+
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -23,9 +27,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +42,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import static com.example.boklista2.R.id.tomView;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -44,10 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar Bar;
     private static final String LOG_TAG = MainActivity.class.getName();
     final String BOOK_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=";
-    private static final String GAME_STATE_KEY = "books";
+    private ConnectivityManager cm;
+    private NetworkInfo activeNetwork;
 
     @Override
-     protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -58,37 +67,37 @@ public class MainActivity extends AppCompatActivity {
 
 //Kolla internet permission
         final int REQUEST_INTERNET_PERMISSION = 1;
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+        final int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
 
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-            ActivityCompat.requestPermissions(
-                    this, new String[]{Manifest.permission.INTERNET},
-                    REQUEST_INTERNET_PERMISSION);
-
-        } else {
-
+        cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 //click listener to Text edit search buttom
-            Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
-            sokKnapp.setOnClickListener(new View.OnClickListener() {
+        Button sokKnapp = (Button) findViewById(R.id.sokKnapp);
+        sokKnapp.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                    Bar.setVisibility(View.VISIBLE);
+                Bar.setVisibility(View.VISIBLE);
+                activeNetwork = cm.getActiveNetworkInfo();
+                if ((activeNetwork != null) && activeNetwork.isConnectedOrConnecting()) {
                     BookAsyncTask task = new BookAsyncTask();
                     task.execute();
-
+                } else {
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                    TextView pelle = (TextView)findViewById(R.id.tomView);
+                    pelle.setText(R.string.no_internet_connection);
+                    pelle.setVisibility(View.VISIBLE);
+                    lv.setVisibility(View.GONE);
                 }
-            });
-
-        }
+            }
+        });
     }
 
+
     @Override
-    protected void onSaveInstanceState(Bundle outState){
-        
+    protected void onSaveInstanceState(Bundle outState) {
+
         super.onSaveInstanceState(outState);
     }
 
@@ -162,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<Bok> bookList) {
 
-            TextView mInfoTextView = (TextView) findViewById(R.id.tomView);
+            TextView mInfoTextView = (TextView) findViewById(tomView);
             if (bookList == null) {
 
                 mInfoTextView.setVisibility(View.VISIBLE);
